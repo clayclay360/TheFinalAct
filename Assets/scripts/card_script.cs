@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class card_script : MonoBehaviour
 {
+    //variables
     public float speed, rotate_speed;
     [HideInInspector]
     public Vector2 target_position;
@@ -13,6 +14,7 @@ public class card_script : MonoBehaviour
     player_controller controller;
     Collider2D col;
 
+    //get components
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,13 +32,15 @@ public class card_script : MonoBehaviour
     {
         movement();
     }
-
+    
+    //move toward where the mouse is clicked
     void movement()
     {
         move_towards_target(target_position);
         rb.velocity = speed * transform.right;
     }
 
+    //get the position where the is clicked
     void get_input()
     {
         if (Input.GetMouseButtonDown(0))
@@ -45,7 +49,8 @@ public class card_script : MonoBehaviour
             target_position = new Vector2(ray.origin.x, ray.origin.y);
         }
     }
-
+    
+    //get the direction of where the mouse is clicked and turn towards said direction
     void move_towards_target(Vector2 target_position)
     {
         Vector2 direction = target_position - rb.position;
@@ -55,6 +60,7 @@ public class card_script : MonoBehaviour
         rb.angularVelocity = -rotate_amount * rotate_speed;
     }
 
+    //if collision hit bunny of out of bounds wall, destroy card, reduce amount of cards, and stop displaying card on UI
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Bunny" || collision.tag == "Wall")
@@ -65,6 +71,7 @@ public class card_script : MonoBehaviour
         }
     }
 
+    //turn on collider in certain amount of time
     IEnumerator turnon_collider()
     {
         yield return new WaitForSeconds(0.25f);
