@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class player_controller : MonoBehaviour
 {
+    //variables
     bool ready_to_throw, cards_thrown;
     float local_x;
 
@@ -40,12 +41,13 @@ public class player_controller : MonoBehaviour
         number_of_cards = max_number_of_cards;
         get_components();
     }
-
+    
     private void get_components()
     {
         animator = GetComponent<Animator>();
     }
 
+    //get the mouse position, if the player left clicks and is ready to throw and the game has started look toward the direction of the mouse
     void Update()
     {
         mouse_position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
@@ -71,6 +73,7 @@ public class player_controller : MonoBehaviour
         }
     }
 
+    //look  at the mouse x position
     private void look_at_card()
     {
         if (0.5f <= mouse_position.x)
@@ -83,11 +86,13 @@ public class player_controller : MonoBehaviour
         }
     }
 
+    //play throw animation
     private void throw_cards()
     {
         animator.SetTrigger("throw");
     }
 
+    //get the rotation depending on the players local scale, start instance card coroutine
     public void get_card()
     {
         if (!cards_thrown)
@@ -106,6 +111,7 @@ public class player_controller : MonoBehaviour
         }
     }
 
+    //instatiate three cards
     private IEnumerator instance_card()
     {
         for(int i = 0; i < number_of_cards; i++)
@@ -117,7 +123,8 @@ public class player_controller : MonoBehaviour
             yield return new WaitForSeconds(wait_time);
         }
     }
-
+    
+    //if at zero cards, restock the cards and trigger throw animation
     private void card_restock()
     {
         if(number_of_cards == 0)
@@ -128,6 +135,7 @@ public class player_controller : MonoBehaviour
         }
     }
 
+    //reduce life by one, if life is zero then game over
     public void deduct_life()
     {
         lives -= 1;
@@ -162,6 +170,7 @@ public class player_controller : MonoBehaviour
         controller.display_end_credit();
     }
 
+    //fade in and out three times, no collision until the iteration is done
     private IEnumerator fade()
     {
         for (int i = 0; i < 3; i++)
