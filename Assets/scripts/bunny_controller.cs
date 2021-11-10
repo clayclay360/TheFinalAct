@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class bunny_controller : MonoBehaviour
 {
+    //variables
     [Header("Bunny Variables:")]
     public float speed;
     public float range;
@@ -21,9 +22,9 @@ public class bunny_controller : MonoBehaviour
     Animator animator;
     Collider2D col;
 
-
     void Start()
     {
+        //get components
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = FindObjectOfType<player_controller>();
@@ -36,11 +37,13 @@ public class bunny_controller : MonoBehaviour
 
     private void Update()
     {
+        //if not in range and is ready to hoop then bounce 
         if(Vector2.Distance(player.transform.position, transform.position) > range && ready_to_hop)
         {
             ready_to_hop = false;
             StartCoroutine(bounce());
         }
+        //else if in range of attack and is ready to attack then attack
         else if(Vector2.Distance(player.transform.position, transform.position) <= range && attack_ready)
         {
             attack_ready = false;
@@ -50,10 +53,12 @@ public class bunny_controller : MonoBehaviour
 
     public void move()
     {
+        //get the direction of the player and move towards that direction
         Vector2 dir = player.transform.position - transform.position;
         dir.Normalize();
         rb.velocity = dir * speed;
-
+        
+        //change the scale depending on the direction your moving
         if(dir.x < 0)
         {
             transform.localScale = new Vector2(-x_scale, transform.localScale.y);
@@ -65,7 +70,8 @@ public class bunny_controller : MonoBehaviour
         ready_to_hop = true;
         attack_ready = true;
     }
-
+    
+    //wait for a specific period of time then play jump animation
     IEnumerator bounce()
     {
         wait_time = Random.Range(1, 2);
@@ -73,6 +79,7 @@ public class bunny_controller : MonoBehaviour
         animator.SetTrigger("hop");
     }
 
+    //wait for a specific peroid of time then play attack animation
     IEnumerator attack()
     {
         wait_time = Random.Range(1, 3);
@@ -80,6 +87,7 @@ public class bunny_controller : MonoBehaviour
         animator.SetTrigger("attack");
     }
 
+    //if hit by projectile die
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Projectile")
@@ -88,20 +96,22 @@ public class bunny_controller : MonoBehaviour
             death();
         }
     }
-
+    
+    //destroy yourself and instantiate particle system
     public void death()
     {
         Instantiate(ps, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 
+    /*note this is poorly written
+    if you stay colliding with the player and is attacking, reduce player's life*/
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
             if (attacking)
             {
-
                 player_controller player = collision.GetComponent<player_controller>();
                 player.deduct_life();
                 attacking = false;
@@ -109,6 +119,7 @@ public class bunny_controller : MonoBehaviour
         }
     }
 
+    //cant even spell
     public void noy_attacking()
     {
         attacking = false;
