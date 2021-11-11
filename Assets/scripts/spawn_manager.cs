@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class spawn_manager : MonoBehaviour
 {
+    //variables 
     [Header("Spawn Variables:")]
     public float height;
     public float max_height;
@@ -31,7 +32,7 @@ public class spawn_manager : MonoBehaviour
         controller = FindObjectOfType<game_controller>();
         StartCoroutine(game_loop());
     }
-
+    //once a position meets the range requirement then instantiate bunny
     public void Update()
     {
 
@@ -70,6 +71,7 @@ public class spawn_manager : MonoBehaviour
         StartCoroutine(game_loop());
     }
 
+    //while the game is started then keep spawning bunnies at different intervals
     public IEnumerator game_loop()
     {
         while (controller.game_started)
